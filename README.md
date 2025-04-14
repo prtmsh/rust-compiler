@@ -114,4 +114,4 @@ fn main() {
 
 ## License
 
-This project is open-source and available for educational purposes under the MIT License.
+This project is open-source and available under the MIT License.
