@@ -62,6 +62,7 @@ STRING      \"[^"]*\"
 "&&"            { return AND; }
 "||"            { return OR; }
 "->"            { return ARROW; }
+".."            { return RANGE; }
 
 [(){}\[\],;:]   { return yytext[0]; }
 "+"             { return '+'; }

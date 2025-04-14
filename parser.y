@@ -23,14 +23,14 @@ void yyerror(const char* s) {
 /* Token declarations */
 %token FN LET MUT IF ELSE WHILE FOR IN RETURN
 %token TRUE FALSE INT_TYPE FLOAT_TYPE BOOL_TYPE STRING_TYPE PRINTLN
-%token EQ NE LE GE AND OR ARROW
+%token EQ NE LE GE AND OR ARROW RANGE
 %token <sval> IDENTIFIER STRING
 %token <ival> INTEGER
 
 /* Non-terminal type declarations */
 %type <node> program decl_list declaration fn_declaration var_declaration
 %type <node> param_list param type stmt_block stmt_list statement expr expr_list fn_call
-%type <node> primary_expr conditional_expr while_loop for_loop
+%type <node> primary_expr conditional_expr while_loop for_loop range_expr
 %type <node> assignment return_stmt
 
 /* Operator precedence */
@@ -151,6 +151,7 @@ expr
     | '!' expr                         {}
     | '-' expr %prec UMINUS           {}
     | fn_call                          {}
+    | range_expr                       {}
     ;
 
 primary_expr
@@ -198,6 +199,12 @@ while_loop
 for_loop
     : FOR IDENTIFIER IN expr stmt_block { 
         if (debug_mode) printf("Parsed for loop\n"); 
+    }
+    ;
+
+range_expr
+    : expr RANGE expr                  { 
+        if (debug_mode) printf("Parsed range expression\n"); 
     }
     ;
 
