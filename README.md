@@ -1,77 +1,91 @@
 # Rust Subset Compiler
 
-A compiler implementation for a subset of the Rust programming language using Flex and Bison.
+A compiler implementation for a subset of the Rust programming language using Flex and Bison. This project demonstrates principles of compiler design including lexical analysis, parsing, and syntax validation.
 
-## Project Overview
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
 
-This project implements a lexical analyzer and syntax parser for a significant subset of the Rust programming language. It demonstrates fundamental compiler design principles including tokenization, parsing, and syntax validation.
+## Overview
 
-## Repository Structure
-
-```
-rust-compiler/
-├── include/               # Header files
-│   ├── ast.h             # Abstract Syntax Tree definitions
-│   └── error_reporter.h  # Error reporting utilities
-├── src/                   # Source code
-│   ├── main.c            # Main entry point
-│   ├── error_reporter.c  # Error reporting implementation
-│   ├── lexer.l           # Flex specification for lexical analysis
-│   └── parser.y          # Bison specification for syntax analysis
-├── tests/                 # Test Rust files
-│   ├── test_valid.rs     # Valid Rust code examples
-│   └── test_invalid.rs   # Invalid Rust code examples
-├── build/                 # Build artifacts (created during build)
-├── Makefile              # Build automation
-└── README.md             # Project documentation
-```
+This compiler processes a subset of Rust language features, providing meaningful error messages and validating syntax. It serves as a demonstration of compiler design principles and language implementation techniques.
 
 ## Features
 
-- **Lexical Analysis**: Tokenizes Rust code into language components using Flex
-- **Syntax Analysis**: Parses token streams using a context-free grammar defined in Bison
-- **Error Reporting**: Provides descriptive error messages with line highlighting
-- **AST Construction**: Structure defined for Abstract Syntax Tree representation
-- **Support for Core Rust Features**:
-  - Function declarations with return types
-  - Variable declarations (mutable and immutable)
-  - Basic types (i32, f64, bool, String)
+- **Lexical Analysis**: Tokenizes Rust code using Flex
+- **Syntax Parsing**: Validates syntax using a Bison-defined grammar
+- **Detailed Error Reporting**: Provides clear error messages with line highlighting
+- **Support for**:
+  - Functions with parameters and return types
+  - Variables (mutable and immutable)
   - Control structures (if-else, while, for)
-  - Expressions and operators
-  - Function calls
-  - println! macro (simplified)
+  - Basic types and expressions
+  - Function calls and the println! macro
 
-## Building the Project
+## Getting Started
 
 ### Prerequisites
 
-- GCC (or compatible C compiler)
-- Flex (The Fast Lexical Analyzer)
+- GCC or compatible C compiler
+- Flex (Fast Lexical Analyzer)
 - Bison (Parser Generator)
+- Make
 
-### Compilation
+### Installation
 
 ```bash
-# Build the entire project
-make
+# Clone the repository
+git clone https://github.com/prtmsh/rust-compiler.git
+cd rust-compiler
 
-# Clean build artifacts
-make clean
+# Build the project
+make
 ```
 
-### Testing
+## Usage
+
+### Analyzing Rust Code
 
 ```bash
-# Test with valid Rust code
+# Parse a valid Rust file
+./rust-compiler path/to/your/code.rs
+
+# Enable debug output
+./rust-compiler path/to/your/code.rs -d
+
+# Disable colored output
+./rust-compiler path/to/your/code.rs -n
+```
+
+### Built-in Test Files
+
+```bash
+# Test with the included valid Rust example
 make test-valid
 
-# Test with invalid Rust code
+# Test with the included invalid Rust example
 make test-invalid
 ```
 
-## Syntax Examples
+### Example Output
 
-### Valid Rust Code Example
+For a valid Rust file:
+```
+Parsing Rust code from tests/test_valid.rs
+Parsing completed successfully.
+```
+
+For a file with errors:
+```
+Parsing Rust code from tests/test_invalid.rs
+Syntax error at tests/test_invalid.rs:5:13: expected ';'
+  let x = 10
+            ^
+  Expected: semicolon to terminate statement
+Parsing failed with 1 error(s).
+```
+
+## Example Rust Code
+
+This compiler can process code like:
 
 ```rust
 fn main() {
@@ -86,22 +100,18 @@ fn main() {
     
     // For loop with range
     for i in 0..5 {
-        println!("Loop iteration", i);
+        println!("Loop iteration {}", i);
     }
 }
 ```
 
-## Educational Value
+## Future Enhancements
 
-This project serves as an educational tool for understanding:
-
-1. Compiler design principles
-2. Lexical analysis with Flex
-3. Parsing with Bison
-4. Context-free grammar design
-5. Abstract Syntax Tree implementation
-6. Basic Rust syntax and semantics
+- Semantic analysis and type checking
+- Code generation
+- Optimizations
+- Support for more Rust features (structs, enums, traits)
 
 ## License
 
-This project is open-source and available for educational purposes.
+This project is open-source and available under the MIT License.
