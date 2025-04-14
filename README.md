@@ -6,12 +6,32 @@ A compiler implementation for a subset of the Rust programming language using Fl
 
 This project implements a lexical analyzer and syntax parser for a significant subset of the Rust programming language. It demonstrates fundamental compiler design principles including tokenization, parsing, and syntax validation.
 
+## Repository Structure
+
+```
+rust-compiler/
+├── include/               # Header files
+│   ├── ast.h             # Abstract Syntax Tree definitions
+│   └── error_reporter.h  # Error reporting utilities
+├── src/                   # Source code
+│   ├── main.c            # Main entry point
+│   ├── error_reporter.c  # Error reporting implementation
+│   ├── lexer.l           # Flex specification for lexical analysis
+│   └── parser.y          # Bison specification for syntax analysis
+├── tests/                 # Test Rust files
+│   ├── test_valid.rs     # Valid Rust code examples
+│   └── test_invalid.rs   # Invalid Rust code examples
+├── build/                 # Build artifacts (created during build)
+├── Makefile              # Build automation
+└── README.md             # Project documentation
+```
+
 ## Features
 
 - **Lexical Analysis**: Tokenizes Rust code into language components using Flex
 - **Syntax Analysis**: Parses token streams using a context-free grammar defined in Bison
-- **Error Reporting**: Provides descriptive error messages for invalid syntax
-- **AST Construction**: Builds an Abstract Syntax Tree representation (structure defined)
+- **Error Reporting**: Provides descriptive error messages with line highlighting
+- **AST Construction**: Structure defined for Abstract Syntax Tree representation
 - **Support for Core Rust Features**:
   - Function declarations with return types
   - Variable declarations (mutable and immutable)
@@ -20,30 +40,6 @@ This project implements a lexical analyzer and syntax parser for a significant s
   - Expressions and operators
   - Function calls
   - println! macro (simplified)
-
-## Technical Implementation
-
-### Context-Free Grammar
-
-The project defines a comprehensive context-free grammar for a subset of Rust, including:
-
-- Program structure
-- Function declarations
-- Variable declarations and assignments
-- Type systems
-- Control flow structures
-- Expressions and operators
-- Function calls
-
-### Project Structure
-
-- **lexer.l**: Flex specification for lexical analysis
-- **parser.y**: Bison specification for syntax analysis
-- **ast.h**: Abstract Syntax Tree definitions
-- **main.c**: Driver program
-- **test_valid.rs**: Sample valid Rust code
-- **test_invalid.rs**: Sample invalid Rust code with syntax errors
-- **Makefile**: Build automation
 
 ## Building the Project
 
@@ -88,42 +84,12 @@ fn main() {
         println!("x is not greater than y");
     }
     
-    while y < x {
-        y = y + 1;
-        println!("y is now", y);
+    // For loop with range
+    for i in 0..5 {
+        println!("Loop iteration", i);
     }
 }
 ```
-
-### Grammar Highlights
-
-```
-fn_declaration
-    : FN IDENTIFIER '(' ')' ARROW type stmt_block    
-    | FN IDENTIFIER '(' ')' stmt_block 
-    ;
-
-var_declaration
-    : LET IDENTIFIER ':' type '=' expr
-    | LET MUT IDENTIFIER ':' type '=' expr
-    | LET IDENTIFIER '=' expr
-    | LET MUT IDENTIFIER '=' expr
-    ;
-
-conditional_expr
-    : IF expr stmt_block
-    | IF expr stmt_block ELSE stmt_block
-    | IF expr stmt_block ELSE conditional_expr
-    ;
-```
-
-## Future Enhancements
-
-- Semantic analysis
-- Type checking
-- Support for more Rust features (structs, enums, traits)
-- Code generation
-- Optimization passes
 
 ## Educational Value
 
@@ -139,7 +105,3 @@ This project serves as an educational tool for understanding:
 ## License
 
 This project is open-source and available for educational purposes.
-
-## Contributors
-
-This project was developed as an academic exercise in compiler design and programming language implementation.
