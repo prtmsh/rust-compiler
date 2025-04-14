@@ -1,36 +1,47 @@
 CC = gcc
-CFLAGS = -Wall -g
+CFLAGS = -Wall -g -I./include
 
-all: rust-compiler
+SRC_DIR = src
+INC_DIR = include
+BUILD_DIR = build
+TESTS_DIR = tests
 
-rust-compiler: main.o lex.yy.o parser.tab.o error_reporter.o
-	$(CC) $(CFLAGS) -o rust-compiler main.o lex.yy.o parser.tab.o error_reporter.o -lfl
+SRCS = $(SRC_DIR)/main.c $(SRC_DIR)/error_reporter.c
+OBJS = $(BUILD_DIR)/main.o $(BUILD_DIR)/lex.yy.o $(BUILD_DIR)/parser.tab.o $(BUILD_DIR)/error_reporter.o
 
-main.o: main.c ast.h parser.tab.h error_reporter.h
-	$(CC) $(CFLAGS) -c main.c
+all: dirs rust-compiler
 
-lex.yy.o: lex.yy.c parser.tab.h error_reporter.h
-	$(CC) $(CFLAGS) -c lex.yy.c
+dirs:
+	@mkdir -p $(BUILD_DIR)
 
-parser.tab.o: parser.tab.c ast.h error_reporter.h
-	$(CC) $(CFLAGS) -c parser.tab.c
+rust-compiler: $(OBJS)
+	$(CC) $(CFLAGS) -o $@ $^ -lfl
 
-error_reporter.o: error_reporter.c error_reporter.h
-	$(CC) $(CFLAGS) -c error_reporter.c
+$(BUILD_DIR)/main.o: $(SRC_DIR)/main.c $(INC_DIR)/ast.h $(BUILD_DIR)/parser.tab.h
+	$(CC) $(CFLAGS) -c $< -o $@
 
-lex.yy.c: lexer.l parser.tab.h
-	flex lexer.l
+$(BUILD_DIR)/lex.yy.o: $(BUILD_DIR)/lex.yy.c $(BUILD_DIR)/parser.tab.h
+	$(CC) $(CFLAGS) -c $< -o $@
 
-parser.tab.c parser.tab.h: parser.y
-	bison -d parser.y
+$(BUILD_DIR)/parser.tab.o: $(BUILD_DIR)/parser.tab.c $(INC_DIR)/ast.h
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(BUILD_DIR)/error_reporter.o: $(SRC_DIR)/error_reporter.c $(INC_DIR)/error_reporter.h
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(BUILD_DIR)/lex.yy.c: $(SRC_DIR)/lexer.l $(BUILD_DIR)/parser.tab.h
+	flex -o $@ $<
+
+$(BUILD_DIR)/parser.tab.c $(BUILD_DIR)/parser.tab.h: $(SRC_DIR)/parser.y
+	bison -d -o $(BUILD_DIR)/parser.tab.c $<
 
 clean:
-	rm -f rust-compiler *.o lex.yy.c parser.tab.c parser.tab.h
+	rm -rf $(BUILD_DIR) rust-compiler
 
 test-valid: rust-compiler
-	./rust-compiler test_valid.rs
+	./rust-compiler $(TESTS_DIR)/test_valid.rs
 
 test-invalid: rust-compiler
-	./rust-compiler test_invalid.rs --debug
+	./rust-compiler $(TESTS_DIR)/test_invalid.rs --debug
 
-.PHONY: all clean test-valid test-invalid
+.PHONY: all clean test-valid test-invalid dirs
